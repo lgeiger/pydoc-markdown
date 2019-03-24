@@ -59,9 +59,9 @@ class Preprocessor(object):
 
     # TODO: Parse type names in parentheses after the argument/attribute name.
     if current_section in ('arguments', 'parameters'):
-      style = r'- __\1__:\3'
-    elif current_section in ('attributes', 'members', 'raises'):
       style = r'- `\1`:\3'
+    elif current_section in ('attributes', 'members', 'raises'):
+      style = r'- __\1__:\3'
     elif current_section in ('returns',):
       style = r'`\1`:\3'
     else:
