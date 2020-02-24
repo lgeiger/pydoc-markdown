@@ -123,12 +123,7 @@ def get_function_signature(function, owner_class=None, show_module=False):
   name = '.'.join(name_parts)
 
   try:
-    fullargspecs = inspect.getfullargspec(inspect.unwrap(function))
-    argspec = inspect.ArgSpec(
-        args=fullargspecs.args,
-        varargs=fullargspecs.varargs,
-        keywords=fullargspecs.varkw,
-        defaults=fullargspecs.defaults)
+    argspec = inspect.getfullargspec(inspect.unwrap(function))
   except TypeError:
     # handle Py2 classes that don't define __init__
     args = []
@@ -139,10 +134,13 @@ def get_function_signature(function, owner_class=None, show_module=False):
       offset = len(args) - len(argspec.defaults)
       for i, default in enumerate(argspec.defaults):
         args[i + offset] = '{}={!r}'.format(args[i + offset], argspec.defaults[i])
+    if argspec.kwonlyargs and argspec.kwonlydefaults:
+      for arg in argspec.kwonlyargs:
+        args.append('{}={!r}'.format(arg, argspec.kwonlydefaults[arg]))
     if argspec.varargs:
       args.append('*' + argspec.varargs)
-    if argspec.keywords:
-      args.append('**' + argspec.keywords)
+    if argspec.varkw:
+      args.append('**' + argspec.varkw)
     try:
       args.remove('self')
     except:
