@@ -130,6 +130,8 @@ def get_function_signature(function, owner_class=None, show_module=False):
   else:
     # Generate the argument list that is separated by colons.
     args = argspec.args[:]
+    if argspec.varargs:
+      args.append('*' + argspec.varargs)
     if argspec.defaults:
       offset = len(args) - len(argspec.defaults)
       for i, default in enumerate(argspec.defaults):
@@ -137,8 +139,6 @@ def get_function_signature(function, owner_class=None, show_module=False):
     if argspec.kwonlyargs and argspec.kwonlydefaults:
       for arg in argspec.kwonlyargs:
         args.append('{}={!r}'.format(arg, argspec.kwonlydefaults[arg]))
-    if argspec.varargs:
-      args.append('*' + argspec.varargs)
     if argspec.varkw:
       args.append('**' + argspec.varkw)
     try:
